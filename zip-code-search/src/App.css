@@ -1,1 +1,14 @@
+h1 {
+    color: white;
+    text-align: center;
+}
 
+.App-header {
+
+    background-color: black;
+}
+
+body {
+
+    display: block;
+}
