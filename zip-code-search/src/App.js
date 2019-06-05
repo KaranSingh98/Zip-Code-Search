@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import ZipCode from './components/zip-code.js';
+import ZipCode from './components/zipCode.js';
 
 function App() {
   return (
