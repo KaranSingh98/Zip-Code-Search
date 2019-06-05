@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import "./zipCode.css";
 
@@ -8,54 +7,59 @@ class ZipCode extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            zipCode: 11419,
+            zip: '',
             data: [],
         };
-
     }
 
 
-    handleOnChange = event => {
+    handleChange = (event) => {
 
         this.setState({
-            zipCode: event.target.value
+            zip: event.target.value
         });
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
+        console.log(`zipcode is ${this.state.zip}`);
 
-        axios.get('http://ctp-zip-api.herokuapp.com/zip/${this.state.zipCode}')
+        axios.get(`http://ctp-zip-api.herokuapp.com/zip/${this.state.zip}`)
             .then(response => {
                 const newData = response.data;
-                this.setState({data: newData})
+                this.setState({data: newData});
             })
             .catch(err => console.log(err));
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+
+        if(prevState.zip !== this.state.zip) {
+
+            this.componentDidMount();
+        }
+
     }
 
     render() {
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
+                <form>
                     Enter a Zip Code <br/>
-                    <input type="number" name="zipCode" onChange={this.handleOnChange}/>
-                    <button type="submit"> Search </button>
+                    <input type="text" name="zip" onChange={this.handleChange}/>
                 </form>
-                <div className="zip">
-                    {this.state.data.map(data => <ZipCodeCard city={data.City}
-                    state={data.State} latitude={data.Lat} longitude={data.Long}
-                    population={data.EstimatedPopulation} wages={data.TotalWages}/>)}
-                </div>
+                {this.state.data.map(data =>
+                    <div key={data.RecordNumber} className="zip">
+                        <ZipCodeCard city={data.City} state={data.State}
+                        latitude={data.Lat} longitude={data.Long}
+                        population={data.EstimatedPopulation} wages={data.TotalWages}/>
+                    </div>
+                )}
             </div>
         );
     }
-
 };
 
 class ZipCodeCard extends Component {
-
-    constructor(props){
-        super(props);
-    }
 
     render() {
         return(
@@ -70,8 +74,6 @@ class ZipCodeCard extends Component {
             </div>
         );
     }
-
-
 };
 
 export default ZipCode;
